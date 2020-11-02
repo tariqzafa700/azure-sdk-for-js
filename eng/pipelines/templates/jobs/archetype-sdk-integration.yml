@@ -37,7 +37,7 @@ parameters:
   default: "@{}"
 - name: TestBrowser
   type: boolean
-  default: true
+  default: false
 - name: TestSamples
   type: boolean
   default: true
