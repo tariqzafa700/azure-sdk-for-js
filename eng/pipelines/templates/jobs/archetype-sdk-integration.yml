@@ -25,7 +25,7 @@ parameters:
   default: false
 - name: SubscriptionConfiguration
   type: string
-  default: $(sub-config-azure-cloud-test-resources)
+  default: $(sub-config-azure-cloud-test-resources-test)
 - name: ResourceGroupLocation
   type: string
   default: ""
@@ -88,7 +88,7 @@ jobs:
       maxParallel: ${{ parameters.MaxParallel }}
       matrix:
         ${{ each matrixEntry in parameters.Matrix }}:
-          ${{ matrixEntry.key }}:         
+          ${{ matrixEntry.key }}:
             # TestResultsFiles
             ${{ if eq(matrixEntry.value.TestType, 'browser' )}}:
               TestResultsFiles: "**/test-results.browser.xml"
@@ -113,8 +113,8 @@ jobs:
           Samples Linux Node 10:
             OSVmImage: "ubuntu-18.04"
             TestType: "sample"
-            NodeTestVersion: "10.x"            
-        
+            NodeTestVersion: "10.x"
+
         # Add matrix entry for min-max testing
         ${{ if eq(parameters.TestMinMax, 'true') }}:
           MaxVersion_Node:
@@ -122,13 +122,13 @@ jobs:
             TestType: "node"
             DependencyVersion: max
             NodeTestVersion: "$(NodeVersion)"
-            TestResultsFiles: "**/test-results.xml"            
+            TestResultsFiles: "**/test-results.xml"
           MinVersion_Node:
             OSVmImage: "ubuntu-18.04"
             TestType: "node"
             DependencyVersion: min
             NodeTestVersion: "$(NodeVersion)"
-            TestResultsFiles: "**/test-results.xml"                  
+            TestResultsFiles: "**/test-results.xml"
 
         # Add matrix entry for same dep testing
         ${{ if eq(parameters.TestSame, 'true') }}:
@@ -137,7 +137,7 @@ jobs:
             TestType: "node"
             DependencyVersion: same
             NodeTestVersion: "$(NodeVersion)"
-            TestResultsFiles: "**/test-results.xml"   
+            TestResultsFiles: "**/test-results.xml"
 
         # Add matrix entry for canary testing
         ${{ if eq(parameters.TestCanary, 'true') }}:
@@ -180,7 +180,7 @@ jobs:
           node common/scripts/install-run-rush.js build:test -t "${{parameters.PackageName}}" --verbose -p max
         displayName: "Build test assets"
         condition: and(succeededOrFailed(),eq(variables['DependencyVersion'],''))
-      
+
       - script: |
           npm install
           node index.js --artifact-name "${{parameters.PackageName}}" --version-type $(DependencyVersion) --source-dir "$(Build.SourcesDirectory)" --test-folder "test/public"
