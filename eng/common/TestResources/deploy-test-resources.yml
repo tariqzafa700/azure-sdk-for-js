@@ -49,13 +49,13 @@ steps:
       }
 
       $accessParameters = @{
-        "SubscriptionId": $subscriptionConfiguration.SubscriptionId,
-        "TenantId": $subscriptionConfiguration.TenantId,
-        "TestApplicationId": $subscriptionConfiguration.TestApplicationId,
-        "TestApplicationSecret": $subscriptionConfiguration.TestApplicationSecret,
-        "ProvisionerApplicationId": $subscriptionConfiguration.ProvisionerApplicationId,
-        "ProvisionerApplicationSecret": $subscriptionConfiguration.ProvisionerApplicationSecret,
-        "Environment": $subscriptionConfiguration.Environment
+        "SubscriptionId" = $subscriptionConfiguration.SubscriptionId;
+        "TenantId" = $subscriptionConfiguration.TenantId;
+        "TestApplicationId" = $subscriptionConfiguration.TestApplicationId;
+        "TestApplicationSecret" = $subscriptionConfiguration.TestApplicationSecret;
+        "ProvisionerApplicationId" = $subscriptionConfiguration.ProvisionerApplicationId;
+        "ProvisionerApplicationSecret" = $subscriptionConfiguration.ProvisionerApplicationSecret;
+        "Environment" = $subscriptionConfiguration.Environment
       }
 
       eng/common/TestResources/New-TestResources.ps1 `
