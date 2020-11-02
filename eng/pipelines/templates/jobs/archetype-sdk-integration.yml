@@ -53,23 +53,10 @@ parameters:
 - name: Matrix
   type: object
   default:
-    Windows Node 8:
-      OSVmImage: "windows-2019"
-      TestType: "node"
-      NodeTestVersion: "8.x"
-      PublishCodeCoverage: true
-    Linux Node 10:
-      OSVmImage: "ubuntu-18.04"
-      TestType: "node"
-      NodeTestVersion: "10.x"
     Linux Node 12:
       OSVmImage: "ubuntu-18.04"
       TestType: "node"
       NodeTestVersion: "12.x"
-    MacOS Node 14:
-      OSVmImage: "macOS-10.15"
-      TestType: "node"
-      NodeTestVersion: "14.x"
 
 jobs:
   - job: "IntegrationTest"
