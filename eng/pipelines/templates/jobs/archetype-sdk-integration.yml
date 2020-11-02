@@ -25,7 +25,8 @@ parameters:
   default: false
 - name: SubscriptionConfiguration
   type: string
-  default: $(sub-config-azure-cloud-test-resources-test)
+  # default: $(sub-config-azure-cloud-test-resources-test)
+  default: $(sub-config-azure-cloud-test-resources)
 - name: ResourceGroupLocation
   type: string
   default: ""
