@@ -15,7 +15,22 @@ parameters:
 #   "ProvisionerApplicationId": "<provisioner app id>",
 #   "ProvisionerApplicationSecret": "<provisioner app secret>",
 #   "Environment": "AzureCloud | AzureGov | AzureChina | <other environment>"
+#   "EnvironmentVariables": {
+#       "SERVICE_MANAGEMENT_URL": "<service management url>",
+#       "STORAGE_ENDPOINT_SUFFIX": "<storage endpoint suffix>",
+#       "RESOURCE_MANAGER_URL": "<resource manager url>",
+#       "SEARCH_ENDPOINT_SUFFIX": "<search endpoint suffix>",
+#       "COSMOS_TABLES_ENDPOINT_SUFFIX": "<cosmos tables endpoint suffix>"
+#   },
+#   "ArmTemplateParameters": {
+#       "keyVaultDomainSuffix": "<keyVaultDomainSuffix>",
+#       "storageEndpointSuffix": "<storageEndpointSuffix>",
+#       "endpointSuffix": "<endpointSuffix>",
+#       "azureAuthorityHost": "<azureAuthorityHost>",
+#       "keyVaultEndpointSuffix": "<keyVaultEndpointSuffix>"
+#   }
 # }
+
 
 steps:
   - template: /eng/common/TestResources/setup-az-modules.yml
@@ -33,13 +48,23 @@ steps:
         $armTemplateParameters = ${{ parameters.ArmTemplateParameters }}
       }
 
+      $accessParameters = @{
+        "SubscriptionId": $subscriptionConfiguration.SubscriptionId,
+        "TenantId": $subscriptionConfiguration.TenantId,
+        "TestApplicationId": $subscriptionConfiguration.TestApplicationId,
+        "TestApplicationSecret": $subscriptionConfiguration.TestApplicationSecret,
+        "ProvisionerApplicationId": $subscriptionConfiguration.ProvisionerApplicationId,
+        "ProvisionerApplicationSecret": $subscriptionConfiguration.ProvisionerApplicationSecret,
+        "Environment": $subscriptionConfiguration.Environment
+      }
+
       eng/common/TestResources/New-TestResources.ps1 `
         -BaseName 'Generated' `
         -ServiceDirectory ${{ parameters.ServiceDirectory }} `
         -Location '${{ parameters.Location }}' `
         -DeleteAfterHours ${{ parameters.DeleteAfterHours }} `
         -AdditionalParameters $armTemplateParameters `
-        @subscriptionConfiguration `
+        @accessParameters `
         -CI `
         -Force `
         -Verbose | Out-Null
