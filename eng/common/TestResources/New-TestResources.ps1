@@ -116,6 +116,8 @@ trap {
     $exitActions.Invoke()
 }
 
+set-psdebug -trace 1
+
 # Enumerate test resources to deploy. Fail if none found.
 $repositoryRoot = "$PSScriptRoot/../../.." | Resolve-Path
 $root = [System.IO.Path]::Combine($repositoryRoot, "sdk", $ServiceDirectory) | Resolve-Path
@@ -325,6 +327,9 @@ if ($TenantId) {
 if ($TestApplicationSecret) {
     $templateParameters.Add('testApplicationSecret', $TestApplicationSecret)
 }
+Write-Verbose "BBP ARM TEMPLATE -------------"
+Write-Verbose $ArmTemplateParameters
+Write-Verbose "-------------"
 if ($ArmTemplateParameters) {
     $templateParameters += $ArmTemplateParameters
 }
