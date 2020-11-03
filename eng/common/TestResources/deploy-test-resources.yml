@@ -62,7 +62,7 @@ steps:
       #       )
       # 3. For duplicate keys, prefer the template/script parameter over the keyvault subscriptionConfiguration.
       if ($armTemplateParameters) {
-        foreach $($p in $(ArmTemplateParameters).GetEnumerator()) {
+        foreach ($p in $(ArmTemplateParameters).GetEnumerator()) {
           if (!$p.Value.platform -or $p.Value.Platform -eq '${{ parameters.Platform }}') {
             $subscriptionConfiguration.ArmTemplateParameters[$p.name] = $p.Value
           }
@@ -71,9 +71,9 @@ steps:
 
       eng/common/TestResources/New-TestResources.ps1 `
         -BaseName 'Generated' `
-        -ServiceDirectory ${{ parameters.ServiceDirectory }} `
+        -ServiceDirectory '${{ parameters.ServiceDirectory }}' `
         -Location '${{ parameters.Location }}' `
-        -DeleteAfterHours ${{ parameters.DeleteAfterHours }} `
+        -DeleteAfterHours '${{ parameters.DeleteAfterHours }}' `
         @subscriptionConfiguration
         -CI `
         -Force `
