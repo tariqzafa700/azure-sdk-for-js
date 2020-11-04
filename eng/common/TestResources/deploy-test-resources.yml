@@ -1,6 +1,7 @@
 parameters:
   ServiceDirectory: not-set
-  ArmTemplateParameters: ''
+  ArmTemplateParameters: '$subscriptionConfiguration.ArmTemplateParameters'
+  PlatformArmTemplateParameters: ''
   DeleteAfterHours: 24
   Location: ''
   SubscriptionConfiguration: $(sub-config-azure-cloud-test-resources)
@@ -45,26 +46,28 @@ steps:
         ${{ parameters.SubscriptionConfiguration }}
       '@ | ConvertFrom-Json -AsHashtable;
 
-      if (!$subscriptionConfiguration.ArmTemplateParameters) {
-        $subscriptionConfiguration.ArmTemplateParameters = @{}
-      }
+      # Support legacy ArmTemplateParameters passed in directly as a hashmap, otherwise default to subscriptionConfiguration JSON.
+      #   Example legacy input: @{ 'param1' = 'foo' ; 'param2' = 'bar' }
+      $subscriptionConfiguration.ArmTemplateParameters = ${{ parameters.ArmTemplateParameters }} ? ${{ parameters.ArmTemplateParameters }} : @{}
 
-      $armTemplateParameters = @'
-        ${{ parameters.ArmTemplateParameters }}
+      # Support additional sdk pipeline and/or platform specific arm template parameters:
+      #   parameters:
+      #     ArmTemplateParameters:
+      #       EnableHsm:
+      #         Value: true
+      #         Platforms:
+      #           - Linux_NetCore_Keyring
+      #       TestGlobalParam:
+      #         Value: global foo
+      # For duplicate keys, prefer the template/script parameter.
+      $platformArmTemplateParameters = @'
+        ${{ parameters.PlatformArmTemplateParameters }}
       '@ | ConvertFrom-Json -AsHashtable;
 
-      # 1. Support legacy ArmTemplateParameters passed in directly as a hashmap:
-      #      @{ 'param1' = 'foo' ; 'param2' = 'bar' }
-      # 2. Support additional sdk pipeline and/or platform specific arm template parameters:
-      #      @{
-      #        'param1' = ${ value = 'foo' ; platform = 'bar' } ;
-      #        'param2' = ${ value = 'baz' } ;
-      #       )
-      # 3. For duplicate keys, prefer the template/script parameter over the keyvault subscriptionConfiguration.
-      if ($armTemplateParameters) {
-        foreach ($p in $(ArmTemplateParameters).GetEnumerator()) {
-          if (!$p.Value.platform -or $p.Value.Platform -eq '${{ parameters.Platform }}') {
-            $subscriptionConfiguration.ArmTemplateParameters[$p.name] = $p.Value
+      if ($platformArmTemplateParameters) {
+        foreach ($p in $platformArmTemplateParameters.GetEnumerator()) {
+          if (!$p.Value.Platforms -or '${{ parameters.Platform }}' -in $p.Value.Platforms) {
+            $subscriptionConfiguration.ArmTemplateParameters[$p.Name] = $p.Value.Value
           }
         }
       }
