@@ -77,7 +77,7 @@ steps:
         -ServiceDirectory '${{ parameters.ServiceDirectory }}' `
         -Location '${{ parameters.Location }}' `
         -DeleteAfterHours '${{ parameters.DeleteAfterHours }}' `
-        @subscriptionConfiguration
+        @subscriptionConfiguration `
         -CI `
         -Force `
         -Verbose | Out-Null
