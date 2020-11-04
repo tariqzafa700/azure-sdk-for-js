@@ -4,7 +4,7 @@ parameters:
   PlatformArmTemplateParameters: ''
   DeleteAfterHours: 24
   Location: ''
-  SubscriptionConfiguration: $(sub-config-azure-cloud-test-resources)
+  SubscriptionConfiguration: $(sub-config-azure-cloud-test-resources-test)
   Platform: ''
 
 # SubscriptionConfiguration will be splat into the parameters of the test
