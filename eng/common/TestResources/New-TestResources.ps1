@@ -77,6 +77,8 @@ param (
     [switch] $OutFile
 )
 
+set-psdebug -trace 1
+
 # By default stop for any error.
 if (!$PSBoundParameters.ContainsKey('ErrorAction')) {
     $ErrorActionPreference = 'Stop'
