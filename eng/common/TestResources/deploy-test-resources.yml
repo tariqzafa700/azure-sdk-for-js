@@ -3,7 +3,7 @@ parameters:
   ArmTemplateParameters: '@{}'
   DeleteAfterHours: 24
   Location: ''
-  SubscriptionConfiguration: $(sub-config-azure-cloud-test-resources)
+  SubscriptionConfiguration: $(sub-config-azure-cloud-test-resources-test)
 
 # SubscriptionConfiguration will be splatted into the parameters of the test
 # resources script. It should be JSON in the form:
