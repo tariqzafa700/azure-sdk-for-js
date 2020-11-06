@@ -332,7 +332,9 @@ if ($ArmTemplateParameters) {
     $templateParameters += $ArmTemplateParameters
 }
 if ($AdditionalParameters) {
-    $templateParameters += $AdditionalParameters
+    foreach ($p in $AdditionalParameters.GetEnumerator()) {
+      $templateParameters[$p.Name] = $p.Value
+    }
 }
 
 # Include environment-specific parameters only if not already provided as part of the "ArmTemplateParameters"
@@ -397,8 +399,8 @@ foreach ($templateFile in $templateFiles) {
         "$($serviceDirectoryPrefix)STORAGE_ENDPOINT_SUFFIX" = $context.Environment.StorageEndpointSuffix;
     }
 
-    foreach ($ev in $EnvironmentVariables) {
-        $deploymentOutputs[$ev.Name] = $ev.Value
+    foreach ($ev in $EnvironmentVariables.GetEnumerator()) {
+        $deploymentOutputs.Add($ev.Name, $ev.Value)
     }
 
     foreach ($key in $deployment.Outputs.Keys) {
